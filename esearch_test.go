@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const AWSElasticsearch = "https://search-comms-api-pj7yt6qa25v26dgpy2njtqzs6m.ap-southeast-1.es.amazonaws.com"
+const AWSElasticsearch = "PUT_ES_SERVER_URL_HERE"
 
 // NOTE: to test AWS elasticsearch credentials must be in environment variable
 // AWS_ACCESS_KEY_ID
