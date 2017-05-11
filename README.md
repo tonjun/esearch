@@ -23,8 +23,8 @@ func main() {
 	// connect to local elasticserach server
 	es := esearch.NewESearch(&esearch.Options{
 		URL: "PUT_ELASTICSEARCH_SERVER_ENDPOINT_HERE",
-        AWSAccessKeyID: "AWS_KEY_HERE",
-        AWSSecretAccessKey: "ACCESS_KEY_HERE",
+		AWSAccessKeyID: "AWS_KEY_HERE",
+		AWSSecretAccessKey: "ACCESS_KEY_HERE",
 	})
 
 	// put some documents
