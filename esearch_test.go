@@ -2,7 +2,7 @@ package esearch
 
 import (
 	"log"
-	"os"
+	//"os"
 	"testing"
 	"time"
 
@@ -60,6 +60,7 @@ func TestESearch(t *testing.T) {
 
 }
 
+/*
 func TestAWSEsearch(t *testing.T) {
 
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile | log.Lmicroseconds)
@@ -111,3 +112,4 @@ func TestAWSEsearch(t *testing.T) {
 	assert.Equal(t, int64(0), res.Hits.Total)
 
 }
+*/
