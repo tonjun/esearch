@@ -43,8 +43,6 @@ func NewESearch(opts *Options) *ESearch {
 	if len(opts.AWSAccessKeyID) > 0 {
 		log.Printf("Using AWS signed requests: URL: %s", opts.URL)
 		signRequest = true
-	} else {
-		log.Printf("Not using AWS signed requests")
 	}
 	return &ESearch{
 		opts:        *opts,
@@ -85,6 +83,9 @@ func (es *ESearch) Put(idx, typ, id string, data M) error {
 		Timeout: (httpTimeout * time.Second),
 	}
 	res, err := client.Do(req)
+	if err != nil {
+		return err
+	}
 	defer res.Body.Close()
 	b, err = ioutil.ReadAll(res.Body)
 	if err != nil {
@@ -173,7 +174,7 @@ func (es *ESearch) DeleteIndex(idx string) error {
 		log.Printf("DeleteIndex: ioutil.ReadAll: error: %s", err.Error())
 		return err
 	}
-	log.Printf("elasticsearch DeleteIndex response: %s", string(b))
+	//log.Printf("elasticsearch DeleteIndex response: %s", string(b))
 	if res.StatusCode < 200 || res.StatusCode > 300 {
 		log.Printf("Error in response: %d", res.StatusCode)
 		return fmt.Errorf("%s", string(b))
