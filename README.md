@@ -38,7 +38,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
 	err = es.Put("twitter", "tweet", "2", esearch.M{
 		"user":     "kimchy",
 		"postDate": "2009-11-15T14:12:12",
