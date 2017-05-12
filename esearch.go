@@ -176,7 +176,7 @@ func (es *ESearch) DeleteIndex(idx string) error {
 	}
 	//log.Printf("elasticsearch DeleteIndex response: %s", string(b))
 	if res.StatusCode < 200 || res.StatusCode > 300 {
-		log.Printf("Error in response: %d", res.StatusCode)
+		log.Printf("DeleteIndex: Error in response: %d", res.StatusCode)
 		return fmt.Errorf("%s", string(b))
 	}
 	return nil
