@@ -22,12 +22,12 @@ func TestESearch(t *testing.T) {
 	es := NewESearch(&Options{URL: "http://localhost:9200"})
 	assert.NotNil(t, es)
 
-	err := es.DeleteIndex("tj-test-index")
-	assert.Nil(t, err)
+	es.DeleteIndex("tj-test-index")
+	//assert.Nil(t, err)
 
 	data := M{"owner": "u1", "message": "hello"}
 
-	err = es.Put("tj-test-index", "test", "doc1", data)
+	err := es.Put("tj-test-index", "test", "doc1", data)
 	assert.Nil(t, err)
 
 	// allow to save
@@ -58,6 +58,8 @@ func TestESearch(t *testing.T) {
 	assert.NotNil(t, res)
 	assert.Equal(t, int64(0), res.Hits.Total)
 
+	err = es.DeleteIndex("tj-test-index")
+	assert.Nil(t, err)
 }
 
 /*
