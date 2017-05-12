@@ -3,6 +3,7 @@
 esearch is an elasicsearch client library that supports AWS elasticsearch service
 
 ![Build Status](https://api.travis-ci.org/tonjun/esearch.svg?branch=master)
+[![GoDoc](https://godoc.org/github.com/tonjun/esearch?status.svg)](https://godoc.org/github.com/tonjun/esearch)
 
 ### Installation
 
