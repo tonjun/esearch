@@ -20,7 +20,7 @@ import (
 
 func main() {
 
-	// connect to local elasticserach server
+	// connect to the elasticsearch server
 	es := esearch.NewESearch(&esearch.Options{
 		URL: "PUT_ELASTICSEARCH_SERVER_ENDPOINT_HERE",
 		AWSAccessKeyID: "AWS_KEY_HERE",
