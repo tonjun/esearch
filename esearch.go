@@ -233,3 +233,38 @@ func (es *ESearch) DeleteDocument(idx, typ, id string) error {
 
 	return nil
 }
+
+// RefreshIndex calls elasticsearch's _refresh API on an index
+func (es *ESearch) RefreshIndex(idx string) error {
+	if len(idx) == 0 {
+		return fmt.Errorf("Empty index")
+	}
+	uri := fmt.Sprintf("%s/%s/_refresh", es.opts.URL, idx)
+	req, err := http.NewRequest("POST", uri, nil)
+	if err != nil {
+		log.Printf("RefreshIndex: http.NewRequest error: %s", err.Error())
+		return err
+	}
+	if es.signRequest {
+		awsauth.Sign4(req, awsauth.Credentials{
+			AccessKeyID:     es.opts.AWSAccessKeyID,
+			SecretAccessKey: es.opts.AWSSecretAccessKey,
+		})
+	}
+	client := &http.Client{
+		Timeout: (httpTimeout * time.Second),
+	}
+	res, err := client.Do(req)
+	if err != nil {
+		log.Printf("client.Do error: %s", err.Error())
+		return err
+	}
+	defer res.Body.Close()
+	b, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		log.Printf("RefreshIndex: ioutil.ReadAll: error: %s", err.Error())
+		return err
+	}
+	log.Printf("RefreshIndex response: \"%s\"", string(b))
+	return nil
+}
