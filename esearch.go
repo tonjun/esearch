@@ -268,3 +268,43 @@ func (es *ESearch) RefreshIndex(idx string) error {
 	log.Printf("RefreshIndex response: \"%s\"", string(b))
 	return nil
 }
+
+// Update does a partial update.
+// https://www.elastic.co/guide/en/elasticsearch/guide/current/partial-updates.html
+func (es *ESearch) Update(idx, typ, id string, data M) error {
+	if len(idx) == 0 || len(typ) == 0 || len(id) == 0 {
+		return fmt.Errorf("Invalid Input: idx: \"%s\" typ: \"%s\" id: \"%s\"", idx, typ, id)
+	}
+	b, err := json.Marshal(data)
+	if err != nil {
+		log.Printf("Update: json.Marshal error: %s", err.Error())
+		return err
+	}
+	uri := fmt.Sprintf("%s/%s/%s/%s/_update", es.opts.URL, idx, typ, id)
+	req, err := http.NewRequest("POST", uri, bytes.NewBuffer(b))
+	if err != nil {
+		log.Printf("Update: http.NewRequest error: %s", err.Error())
+		return err
+	}
+	if es.signRequest {
+		awsauth.Sign4(req, awsauth.Credentials{
+			AccessKeyID:     es.opts.AWSAccessKeyID,
+			SecretAccessKey: es.opts.AWSSecretAccessKey,
+		})
+	}
+	client := &http.Client{
+		Timeout: (httpTimeout * time.Second),
+	}
+	res, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+	_, err = ioutil.ReadAll(res.Body)
+	if err != nil {
+		log.Printf("Update: ioutil.ReadAll: error: %s", err.Error())
+		return err
+	}
+	//log.Printf("Update response: %s", string(b))
+	return nil
+}
