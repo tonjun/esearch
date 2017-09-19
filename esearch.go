@@ -84,6 +84,7 @@ func (es *ESearch) Put(idx, typ, id string, data M) error {
 	}
 	res, err := client.Do(req)
 	if err != nil {
+		log.Printf("client.Do error: %s", err.Error())
 		return err
 	}
 	defer res.Body.Close()
@@ -121,6 +122,10 @@ func (es *ESearch) Search(idx, typ string, query M) (*Result, error) {
 		Timeout: (httpTimeout * time.Second),
 	}
 	res, err := client.Do(req)
+	if err != nil {
+		log.Printf("client.Do error: %s", err.Error())
+		return nil, err
+	}
 	defer res.Body.Close()
 	b, err = ioutil.ReadAll(res.Body)
 	if err != nil {
@@ -168,6 +173,10 @@ func (es *ESearch) DeleteIndex(idx string) error {
 		Timeout: (httpTimeout * time.Second),
 	}
 	res, err := client.Do(req)
+	if err != nil {
+		log.Printf("client.Do error: %s", err.Error())
+		return nil, err
+	}
 	defer res.Body.Close()
 	b, err := ioutil.ReadAll(res.Body)
 	if err != nil {
@@ -219,6 +228,10 @@ func (es *ESearch) DeleteDocument(idx, typ, id string) error {
 		Timeout: (httpTimeout * time.Second),
 	}
 	res, err := client.Do(req)
+	if err != nil {
+		log.Printf("client.Do error: %s", err.Error())
+		return nil, err
+	}
 	defer res.Body.Close()
 	b, err := ioutil.ReadAll(res.Body)
 	if err != nil {
@@ -296,6 +309,10 @@ func (es *ESearch) Update(idx, typ, id string, data M) error {
 		Timeout: (httpTimeout * time.Second),
 	}
 	res, err := client.Do(req)
+	if err != nil {
+		log.Printf("client.Do error: %s", err.Error())
+		return err
+	}
 	if err != nil {
 		return err
 	}
