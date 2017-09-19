@@ -175,7 +175,7 @@ func (es *ESearch) DeleteIndex(idx string) error {
 	res, err := client.Do(req)
 	if err != nil {
 		log.Printf("client.Do error: %s", err.Error())
-		return nil, err
+		return err
 	}
 	defer res.Body.Close()
 	b, err := ioutil.ReadAll(res.Body)
@@ -230,7 +230,7 @@ func (es *ESearch) DeleteDocument(idx, typ, id string) error {
 	res, err := client.Do(req)
 	if err != nil {
 		log.Printf("client.Do error: %s", err.Error())
-		return nil, err
+		return err
 	}
 	defer res.Body.Close()
 	b, err := ioutil.ReadAll(res.Body)
@@ -311,9 +311,6 @@ func (es *ESearch) Update(idx, typ, id string, data M) error {
 	res, err := client.Do(req)
 	if err != nil {
 		log.Printf("client.Do error: %s", err.Error())
-		return err
-	}
-	if err != nil {
 		return err
 	}
 	defer res.Body.Close()
