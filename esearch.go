@@ -71,6 +71,7 @@ func (es *ESearch) Put(idx, typ, id string, data M) error {
 		log.Printf("Insert: http.NewRequest error: %s", err.Error())
 		return err
 	}
+	req.Header.Set("Content-Type", "application/json")
 
 	if es.signRequest {
 		awsauth.Sign4(req, awsauth.Credentials{
@@ -110,6 +111,7 @@ func (es *ESearch) Search(idx, typ string, query M) (*Result, error) {
 		log.Printf("Search: http.NewRequest error: %s", err.Error())
 		return nil, err
 	}
+	req.Header.Set("Content-Type", "application/json")
 
 	if es.signRequest {
 		awsauth.Sign4(req, awsauth.Credentials{
@@ -299,6 +301,7 @@ func (es *ESearch) Update(idx, typ, id string, data M) error {
 		log.Printf("Update: http.NewRequest error: %s", err.Error())
 		return err
 	}
+	req.Header.Set("Content-Type", "application/json")
 	if es.signRequest {
 		awsauth.Sign4(req, awsauth.Credentials{
 			AccessKeyID:     es.opts.AWSAccessKeyID,
