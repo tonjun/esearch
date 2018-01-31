@@ -27,9 +27,20 @@ func TestESearch(t *testing.T) {
 	es.DeleteIndex(idx)
 	//assert.Nil(t, err)
 
-	data := M{"owner": "u1", "message": "hello", "seen": false}
+	err := es.CreateIndex(idx)
+	assert.Nil(t, err)
+	err = es.PutMapping(idx, "test", M{
+		"properties": M{
+			"owner": M{
+				"type": "keyword",
+			},
+		},
+	})
+	assert.Nil(t, err)
 
-	err := es.Put(idx, "test", "doc1", data)
+	data := M{"owner": "User-1", "message": "hello", "seen": false}
+
+	err = es.Put(idx, "test", "doc1", data)
 	assert.Nil(t, err)
 
 	// allow to save
@@ -37,7 +48,7 @@ func TestESearch(t *testing.T) {
 
 	query := M{
 		"query": M{
-			"term": M{"owner": "u1"},
+			"term": M{"owner": "User-1"},
 		},
 	}
 	res, err := es.Search(idx, "test", query)

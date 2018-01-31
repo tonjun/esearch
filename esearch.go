@@ -148,6 +148,41 @@ func (es *ESearch) Search(idx, typ string, query M) (*Result, error) {
 	return result, nil
 }
 
+// CreateIndex creates an index
+func (es *ESearch) CreateIndex(idx string) error {
+	uri := fmt.Sprintf("%s/%s", es.opts.URL, idx)
+	req, err := http.NewRequest("PUT", uri, nil)
+	if err != nil {
+		log.Printf("CreateIndex: http.NewRequest error: %s", err.Error())
+		return err
+	}
+	if es.signRequest {
+		awsauth.Sign4(req, awsauth.Credentials{
+			AccessKeyID:     es.opts.AWSAccessKeyID,
+			SecretAccessKey: es.opts.AWSSecretAccessKey,
+		})
+	}
+	client := &http.Client{
+		Timeout: (httpTimeout * time.Second),
+	}
+	res, err := client.Do(req)
+	if err != nil {
+		log.Printf("client.Do error: %s", err.Error())
+		return err
+	}
+	defer res.Body.Close()
+	b, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		log.Printf("CreateIndex: ioutil.ReadAll: error: %s", err.Error())
+		return err
+	}
+	if res.StatusCode < 200 || res.StatusCode > 300 {
+		log.Printf("CreateIndex: Error in response: %d", res.StatusCode)
+		return fmt.Errorf("%s", string(b))
+	}
+	return nil
+}
+
 // DeleteIndex deletes the given index
 func (es *ESearch) DeleteIndex(idx string) error {
 	uri := fmt.Sprintf("%s/%s", es.opts.URL, idx)
@@ -323,5 +358,48 @@ func (es *ESearch) Update(idx, typ, id string, data M) error {
 		return err
 	}
 	//log.Printf("Update response: %s", string(b))
+	return nil
+}
+
+// PutMapping calls elasticsearch's Put Mapping API
+func (es *ESearch) PutMapping(idx, typ string, data M) error {
+	if len(idx) == 0 || len(typ) == 0 {
+		return fmt.Errorf("Invalid Input: idx: \"%s\" typ: \"%s\"", idx, typ)
+	}
+	b, err := json.Marshal(data)
+	if err != nil {
+		log.Printf("PutMapping: json.Marshal error: %s", err.Error())
+		return err
+	}
+	uri := fmt.Sprintf("%s/%s/_mapping/%s", es.opts.URL, idx, typ)
+	req, err := http.NewRequest("PUT", uri, bytes.NewBuffer(b))
+	if err != nil {
+		log.Printf("PutMapping: http.NewRequest error: %s", err.Error())
+		return err
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	if es.signRequest {
+		awsauth.Sign4(req, awsauth.Credentials{
+			AccessKeyID:     es.opts.AWSAccessKeyID,
+			SecretAccessKey: es.opts.AWSSecretAccessKey,
+		})
+	}
+
+	client := &http.Client{
+		Timeout: (httpTimeout * time.Second),
+	}
+	res, err := client.Do(req)
+	if err != nil {
+		log.Printf("client.Do error: %s", err.Error())
+		return err
+	}
+	defer res.Body.Close()
+	b, err = ioutil.ReadAll(res.Body)
+	if err != nil {
+		log.Printf("PutMapping: ioutil.ReadAll: error: %s", err.Error())
+		return err
+	}
+	//log.Printf("elasticsearch Put response: %s", string(b))
 	return nil
 }
