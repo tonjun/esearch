@@ -177,7 +177,7 @@ func (es *ESearch) CreateIndex(idx string) error {
 		return err
 	}
 	if res.StatusCode < 200 || res.StatusCode > 300 {
-		log.Printf("CreateIndex: Error in response: %d", res.StatusCode)
+		//log.Printf("CreateIndex: Error in response: %d", res.StatusCode)
 		return fmt.Errorf("%s", string(b))
 	}
 	return nil
