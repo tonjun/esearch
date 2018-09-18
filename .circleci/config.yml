@@ -1,0 +1,19 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/golang:1.10
+      - image: docker.elastic.co/elasticsearch/elasticsearch:6.3.2
+    working_directory: /go/src/github.com/tonjun/esearch
+    environment:
+      xpack.security.enabled: false
+    steps:
+      - checkout
+      - run: go get -v -t -d ./...
+      - run: go test -v ./...
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
