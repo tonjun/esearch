@@ -94,7 +94,9 @@ func (es *ESearch) Put(idx, typ, id string, data M) error {
 		log.Printf("Put: ioutil.ReadAll: error: %s", err.Error())
 		return err
 	}
-	//log.Printf("elasticsearch Put response: %s", string(b))
+	if res.StatusCode < 200 || res.StatusCode > 299 {
+		return fmt.Errorf("error code: %d response: %s", res.StatusCode, string(b))
+	}
 	return nil
 }
 
