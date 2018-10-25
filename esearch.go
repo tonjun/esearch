@@ -138,8 +138,8 @@ func (es *ESearch) Search(idx, typ string, query M) (*Result, error) {
 	}
 	//log.Printf("elasticsearch Search response: %s", string(b))
 	if res.StatusCode < 200 || res.StatusCode > 300 {
-		log.Printf("Error in response: %d", res.StatusCode)
-		return nil, fmt.Errorf("%s", string(b))
+		//log.Printf("Error in response: %d", res.StatusCode)
+		return nil, fmt.Errorf("statusCode: %d %s", res.StatusCode, string(b))
 	}
 	result := &Result{}
 	err = json.Unmarshal(b, result)
